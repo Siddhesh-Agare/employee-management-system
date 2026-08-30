@@ -3,6 +3,7 @@ import  mongoose from 'mongoose'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import authRouter from './src/routes/authRoutes.js';
+import userRouter from './src/routes/userRoutes.js';
 
 const app = express();
 dotenv.config()
@@ -16,6 +17,7 @@ app.get("/",(req,res)=>{
 
 app.use("/api/auth",authRouter)
 app.use("/api/auth",authRouter)
+app.use("/api/user",userRouter)
 
 mongoose.connect(process.env.MONGO_URI).then(()=>{
     console.log("MongoDb connected")

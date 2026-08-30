@@ -66,11 +66,11 @@ export const LoginEmployee = async(req,res)=>{
         })
     }
 
-    if (user.status !== "active") {
-        return res.status(403).json({
-            message: `Account is ${user.status}`
-        });
-    }
+    // if (user.status !== "active") {
+    //     return res.status(403).json({
+    //         message: `Account is ${user.status}`
+    //     });
+    // }
 
     const isPasswordCorrect = await bcrypt.compare(
             password,
