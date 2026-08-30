@@ -2,6 +2,7 @@ import express from 'express'
 import  mongoose from 'mongoose'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import authRouter from './src/routes/authRoutes.js';
 
 const app = express();
 dotenv.config()
@@ -12,6 +13,8 @@ app.use(express.json())
 app.get("/",(req,res)=>{
     res.send("response from backned");
 })
+
+app.use("/api/auth",authRouter)
 
 mongoose.connect(process.env.MONGO_URI).then(()=>{
     console.log("MongoDb connected")
