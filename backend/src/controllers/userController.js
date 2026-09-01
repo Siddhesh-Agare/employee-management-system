@@ -22,6 +22,24 @@ export const getCurrentUser = async(req,res)=>{
         
     }
 
+}
 
 
+export const approveEmployee = async(req,res)=>{
+    try {
+        const empId = req.params.id;
+
+        const employee = await User.updateOne({_id:empId},{$set:{
+            status:"active"
+        }})
+
+        res.status(200).json({
+            message:"Employee approved"
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            message:"Error in employee approval"
+        })
+    }
 }

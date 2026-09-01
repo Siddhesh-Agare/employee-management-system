@@ -1,10 +1,13 @@
 import express from 'express'
 import protect from '../middlewares/authMiddleware.js';
 import { authorize } from '../middlewares/roleMiddleware.js';
-import { getPendingEmployee } from '../controllers/adminController.js';
+import { approveEmployee, getPendingEmployee, rejectEmployee } from '../controllers/adminController.js';
+
 
 const router = express.Router();
 
 router.get("/employee/pending",protect,authorize("admin"),getPendingEmployee)
+router.patch("/employee/:id/approve",protect,authorize("admin"),approveEmployee)
+router.patch("/employee/:id/reject",protect,authorize("admin"),rejectEmployee)
 
 export default router;
