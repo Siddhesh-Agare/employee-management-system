@@ -181,3 +181,24 @@ export const createManager = async (req,res)=>{
         })
     }
 }
+
+export const getMangers = async(req,res)=>{
+    try {
+
+        const managers = await User.find({
+            role:"manager"
+        }).select("-password")
+
+
+        res.status(200).json({
+            message:"managers list",
+            managers
+        })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message:"Error in getting managers"
+        })
+    }
+}
