@@ -86,7 +86,7 @@ export const LoginEmployee = async(req,res)=>{
     const token = jwt.sign(
         {userId:user._id},
         process.env.JWT_SECRET,
-        {expiresIn:"2h"}
+        {expiresIn:"2d"}
     )
 
     res.status(200).json({

@@ -5,6 +5,7 @@ import authRouter from './src/routes/authRoutes.js';
 import userRouter from './src/routes/userRoutes.js';
 import adminRouter from './src/routes/adminRoutes.js';
 import connectDB from './src/config/db.js';
+import managerRouter from './src/routes/managerRoutes.js';
 
 const app = express();
 dotenv.config()
@@ -19,6 +20,7 @@ app.get("/",(req,res)=>{
 app.use("/api/auth",authRouter)
 app.use("/api/user",userRouter)
 app.use("/api/admin",adminRouter)
+app.use("/api/manager",managerRouter)
 
 connectDB();
 
