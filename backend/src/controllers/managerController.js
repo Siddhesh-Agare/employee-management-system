@@ -67,3 +67,48 @@ export const approveMyEmployee = async(req,res)=>{
         
     }
 }
+
+
+export const rejectMyEmployee = async(req,res)=>{
+    try {
+
+        const managerId = req.user._id;
+        const employeeId = req.params.employeeId;
+
+        const employee = await User.findOne(
+            {
+                _id:employeeId,
+                role:"employee",
+                manager:managerId,
+                status: "pending"
+            }
+        );
+        if(!employee){
+            return res.status(404).json({
+                message:"Employee does not found or not assigned to you"
+            })
+        }
+
+        await User.updateOne(
+            {
+                _id:employeeId,
+            },
+        {
+            $set:{
+                status:"rejected"
+            }
+        })
+
+        res.status(200).json({
+            message:"employee rejected successfully"
+        })
+
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message:"Erros in manager employee rejection "
+        })
+        
+    }
+}

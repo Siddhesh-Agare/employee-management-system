@@ -222,7 +222,7 @@ export const assignEmployeeToManager = async (req, res) => {
         const employee = await User.findOne({
             _id: employeeId,
             role: "employee",
-            status: "active"
+            status: { $in: ["pending", "active"] }
         });
 
         if (!employee) {
