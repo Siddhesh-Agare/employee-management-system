@@ -202,3 +202,55 @@ export const getMangers = async(req,res)=>{
         })
     }
 }
+
+export const assignEmployeeToManager = async (req, res) => {
+    try {
+        const managerId = req.params.managerId;
+        const employeeId = req.params.employeeId;
+
+        const manager = await User.findOne({
+            _id: managerId,
+            role: "manager"
+        });
+
+        if (!manager) {
+            return res.status(404).json({
+                message: "Manager not found"
+            });
+        }
+
+        const employee = await User.findOne({
+            _id: employeeId,
+            role: "employee",
+            status: "active"
+        });
+
+        if (!employee) {
+            return res.status(404).json({
+                message: "Active employee not found"
+            });
+        }
+
+        await User.updateOne(
+            {
+                _id: employee._id
+            },
+            {
+                $set: {
+                    manager: manager._id
+                }
+            }
+        );
+
+        res.status(200).json({
+            message: `Employee ${employee.name} assigned to manager ${manager.name} successfully`
+        });
+
+    } catch (error) {
+        console.log(error);
+
+        res.status(500).json({
+            message: "Error in assigning employee"
+        });
+    }
+};
