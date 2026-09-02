@@ -25,8 +25,11 @@ const userSchema = new mongoose.Schema(
             required:true,
             enum:["pending","active","rejected","inactive"]
         },
-
-
+        manager:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            default: null
+        }
     },
     {
         timestamps:true

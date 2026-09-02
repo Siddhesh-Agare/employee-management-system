@@ -1,4 +1,5 @@
 import User from "../models/User.model.js"
+import bcrypt from 'bcrypt'
 
 export const getPendingEmployee = async(req,res)=>{
     
@@ -134,5 +135,49 @@ export const rejectEmployee = async(req,res)=>{
             message:"Erros in employee rejaction"
         })
         
+    }
+}
+
+
+export const createManager = async (req,res)=>{
+    try {
+        
+        const {name, email, password } = req.body;
+
+        if(!name || !email || !password){
+            return res.status(400).json({
+                message:"All fields are requied"
+            })
+        }
+
+        const user = await User.findOne({email});
+
+        if(user){
+           return res.status(409).json({
+            message:"User is already exist"
+           }) 
+        }
+
+        const hashPassword = await bcrypt.hash(password, 10);
+
+        await User.create({
+            name,
+            email,
+            password:hashPassword,
+            role:"manager",
+            status:"active"
+        })
+
+        res.status(201).json({
+            message:"Manager Id createded successfully"
+        })
+
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message:"Error in manager creation"
+        })
     }
 }
