@@ -1,3 +1,4 @@
+import Task from "../models/Task.model.js";
 import User from "../models/User.model.js";
 
 export const getMyEmployee = async (req,res)=>{
@@ -112,3 +113,56 @@ export const rejectMyEmployee = async(req,res)=>{
         
     }
 }
+
+export const createTask = async(req, res)=>{
+    try {
+
+        const managerId = req.user._id;
+        const {title, description, assignedTo, dueDate} = req.body;
+
+        if(!title || !description || !assignedTo || !dueDate){
+            return res.status(400).json({
+                message:"All fields are required"
+            })
+        }
+
+        const assignedEmployee = await User.findOne(
+            {
+                _id:assignedTo,
+                manager:managerId,
+                role:"employee",
+                status:"active"
+            }
+        );
+
+        if(!assignedEmployee){
+            return res.status(400).json({
+                message:"Employee not assigned to you or not found or status is not active"
+            })
+        }
+
+        const task = await Task.create({
+            title,
+            description,
+            assignedTo,
+            assignedBy:managerId,
+            dueDate
+
+        })
+
+        res.status(201).json({
+            message:`task created successfully`,
+            task
+        })
+
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message:"Error in task creation"
+        })
+        
+    }
+}
+
+
