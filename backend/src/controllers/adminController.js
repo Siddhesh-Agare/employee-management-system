@@ -41,7 +41,7 @@ export const approveEmployee = async(req,res)=>{
 
         if(!employee){
             return res.status(404).json({
-                message:"employee is not exist"
+                message:"Employee not found"
             })
         }
 
@@ -73,7 +73,7 @@ export const approveEmployee = async(req,res)=>{
             )
 
         res.status(200).json({
-           message:'employee approved'
+           message:'Employee approved successfully'
         })
 
     } catch (error) {
@@ -96,7 +96,7 @@ export const rejectEmployee = async(req,res)=>{
 
        if(!employee){
         return res.status(404).json({
-            message:"Employee not exist"
+            message:"Employee not found"
         })
        }
 
@@ -123,7 +123,7 @@ export const rejectEmployee = async(req,res)=>{
         )
 
         res.status(200).json({
-           message:'employee rejected successfully'
+           message:'Employee rejected successfully'
         })
 
 
@@ -146,7 +146,7 @@ export const createManager = async (req,res)=>{
 
         if(!name || !email || !password){
             return res.status(400).json({
-                message:"All fields are requied"
+                message:"All fields are required"
             })
         }
 
@@ -154,7 +154,7 @@ export const createManager = async (req,res)=>{
 
         if(user){
            return res.status(409).json({
-            message:"User is already exist"
+            message:"User already exist"
            }) 
         }
 
@@ -169,7 +169,7 @@ export const createManager = async (req,res)=>{
         })
 
         res.status(201).json({
-            message:"Manager Id createded successfully"
+            message:"Manager created successfully"
         })
 
 
@@ -182,7 +182,7 @@ export const createManager = async (req,res)=>{
     }
 }
 
-export const getMangers = async(req,res)=>{
+export const getManagers = async(req,res)=>{
     try {
 
         const managers = await User.find({
@@ -191,7 +191,7 @@ export const getMangers = async(req,res)=>{
 
 
         res.status(200).json({
-            message:"managers list",
+            message:"Managers fetched successfully",
             managers
         })
         
@@ -227,7 +227,7 @@ export const assignEmployeeToManager = async (req, res) => {
 
         if (!employee) {
             return res.status(404).json({
-                message: "Active employee not found"
+                message: "Pending or active employee not found"
             });
         }
 

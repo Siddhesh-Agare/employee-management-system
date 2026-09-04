@@ -18,7 +18,7 @@ export const registerEmployee = async(req, res)=>{
 
         if(userExist){
             return res.status(409).json({
-                message:"User is already exist"
+                message:"User already exists"
             })
         }
 
@@ -61,7 +61,7 @@ export const LoginEmployee = async(req,res)=>{
     const user = await User.findOne({email});
 
     if(!user){
-        return res.status(404).json({
+        return res.status(401).json({
             message:"Invalid email or password"
         })
     }
@@ -90,7 +90,7 @@ export const LoginEmployee = async(req,res)=>{
     )
 
     res.status(200).json({
-        message:"Login sucessfull",
+        message:"Login sucessful",
         token
     })
 

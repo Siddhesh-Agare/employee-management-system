@@ -12,7 +12,7 @@ export const getMyEmployee = async (req,res)=>{
         }).select("-password")
 
         res.status(200).json({
-            message:"List of your employees",
+            message:"Employees fetched successfully",
             myEmployees
         })
         
