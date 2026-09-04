@@ -164,3 +164,26 @@ export const createTask = async(req, res)=>{
         
     }
 }
+
+export const getManagerTask = async(req, res) =>{
+    try {
+
+        const tasks = await Task.find({
+            assignedBy:req.user._id,
+        })
+
+        res.status(200).json({
+            message:"Your tasks",
+            tasks
+        })
+
+
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message:"Error in fetching manager tasks"
+        })
+        
+    }
+}
