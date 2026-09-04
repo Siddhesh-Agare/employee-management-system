@@ -187,3 +187,89 @@ export const getManagerTask = async(req, res) =>{
         
     }
 }
+
+
+export const reviewTask = async (req, res)=>{
+    try {
+
+        const task = await Task.findOne({_id:req.params.taskId,assignedBy:req.user._id,status:"submitted"})
+
+        if(!task){
+            return res.status(404).json({
+                message:"task is not found"
+            })
+        }
+
+        await Task.updateOne(
+            {
+                _id:task._id
+            },
+            {
+                $set:
+                {
+                    status:"reviewed"
+
+                }
+            }
+        )
+
+        res.status(200).json({
+            message:"task reviewed successfully"
+        })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message:"Error in task review"
+        })
+        
+    }
+}
+
+export const updateTaskStatusChangesRequired = async (req, res) => {
+    try {
+
+        const { feedback } = req.body || {};
+
+        const task = await Task.findOne({
+            _id: req.params.taskId,
+            assignedBy: req.user._id,
+            status: "submitted"
+        });
+
+        if (!task) {
+            return res.status(404).json({
+                message: "Task is not found"
+            });
+        }
+
+        if (!feedback) {
+            return res.status(400).json({
+                message: "Feedback is required"
+            });
+        }
+
+        await Task.updateOne(
+            {
+                _id: task._id
+            },
+            {
+                $set: {
+                    status: "changes-required",
+                    feedback: feedback
+                }
+            }
+        );
+
+        res.status(200).json({
+            message: "Task sent back for changes successfully"
+        });
+
+    } catch (error) {
+        console.log(error);
+
+        res.status(500).json({
+            message: "Error in updating task status"
+        });
+    }
+};

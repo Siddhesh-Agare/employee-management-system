@@ -26,7 +26,7 @@ const taskSchema = new mongoose.Schema(
 
         status: {
             type: String,
-            enum: ["assigned", "in-progress", "submitted", "reviewed"],
+            enum: ["assigned", "in-progress", "submitted","changes-required", "reviewed"],
             default: "assigned",
             required: true
         },
@@ -39,7 +39,12 @@ const taskSchema = new mongoose.Schema(
         response: {
             type: String,
             default: ""
-        }
+        },
+
+        feedback: {
+            type: String,
+            default: ""
+        },
     },
     {
         timestamps: true

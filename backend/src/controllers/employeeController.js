@@ -35,7 +35,7 @@ export const updateTaskStatus = async (req, res) => {
         }
 
         // assigned → in-progress
-        if (task.status === "assigned") {
+        if (task.status === "assigned" || task.status === "changes-required") {
             await Task.updateOne(
                 {
                     _id: task._id
