@@ -3,6 +3,7 @@ import Login from './pages/Login'
 import { Toaster } from 'react-hot-toast'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const App = () => {
   return (
@@ -10,7 +11,7 @@ const App = () => {
     <Toaster/>
     <Routes>
       <Route path='/' element={<Login/>}/>
-      <Route path='/dashboard' element={<Dashboard/>}/>
+      <Route path='/dashboard' element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
     </Routes>
     </BrowserRouter>
   )
