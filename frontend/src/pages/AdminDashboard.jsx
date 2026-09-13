@@ -14,6 +14,12 @@ const AdminDashboard = () => {
   const [managerName, setManagerName] = useState("");
   const [managerEmail, setManagerEmail] = useState("");
   const [managerPassword, setManagerPassword] = useState("");
+  const [selectedEmployee, setSelectedEmployee] = useState("")
+  const [selectedManager, setSelectedManager] = useState("");
+  const [showManagers, setShowManagers] = useState(false)
+  const [showEmployees, setshowEmployees] = useState(false)
+  const [managerSearch, setManagerSearch] = useState("")
+  const [employeeSearch, setEmployeeSearch] = useState("")
 
   const logout = ()=>{
         localStorage.removeItem("token")
@@ -119,7 +125,7 @@ const AdminDashboard = () => {
   const getActiveAndPendingEmployess = async()=>{
     try {
 
-      const response = await api.get("api/admin/employee/active")
+      const response = await api.get("/api/admin/employee/active")
       setActiveEmployees(response.data.employees);
       console.log(response.data.employees);
             
@@ -220,6 +226,105 @@ const AdminDashboard = () => {
 
   </div>
 
+  {/* Assign Employee Component (Static UI) */}
+  <div className="bg-white p-4 border rounded space-y-4">
+    <h2 className="font-bold text-md border-b pb-2">Assign Employee</h2>
+    
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Employee Selection */}
+      <div className="space-y-2">
+        <label className="block text-sm font-semibold text-gray-700">Employee</label>
+         <div className="relative">
+  <input
+    type="text"
+    value={employeeSearch}
+    onChange={(e) => {
+      setEmployeeSearch(e.target.value);
+      setshowEmployees(true);
+    }}
+    onFocus={() => setshowEmployees(true)}
+    placeholder="🔍 Search manager..."
+    className="w-full border p-2 text-sm rounded"
+  />
+
+  {showEmployees && (
+    <div className="absolute w-full bg-white border rounded mt-1 z-10">
+      {activeEmployees
+        .filter((employee) =>
+          employee.name.toLowerCase().includes(employeeSearch.toLowerCase())
+        )
+        .map((employee) => {
+          return (
+            <div
+              key={employee._id}
+              onClick={() => {
+                setSelectedEmployee(employee._id);
+                setEmployeeSearch(employee.name);
+                setshowEmployees(false);
+              }}
+              className="p-2 text-sm hover:bg-gray-100 cursor-pointer"
+            >
+              {employee.name}
+            </div>
+          );
+        })}
+    </div>
+  )}
+</div>
+        
+      </div>
+
+      {/* Manager Selection */}
+      <div className="space-y-2">
+        <label className="block text-sm font-semibold text-gray-700">Manager</label>
+        <div className="relative">
+  <input
+    type="text"
+    value={managerSearch}
+    onChange={(e) => {
+      setManagerSearch(e.target.value);
+      setShowManagers(true);
+    }}
+    onFocus={() => setShowManagers(true)}
+    placeholder="🔍 Search manager..."
+    className="w-full border p-2 text-sm rounded"
+  />
+
+  {showManagers && (
+    <div className="absolute w-full bg-white border rounded mt-1 z-10">
+      {managers
+        .filter((manager) =>
+          manager.name.toLowerCase().includes(managerSearch.toLowerCase())
+        )
+        .map((manager) => {
+          return (
+            <div
+              key={manager._id}
+              onClick={() => {
+                setSelectedManager(manager._id);
+                setManagerSearch(manager.name);
+                setShowManagers(false);
+              }}
+              className="p-2 text-sm hover:bg-gray-100 cursor-pointer"
+            >
+              {manager.name}
+            </div>
+          );
+        })}
+    </div>
+  )}
+</div>
+      </div>
+    </div>
+
+    {/* Assign Button */}
+    <div className="flex justify-end pt-2">
+      <button className="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700">
+        Assign Employee
+      </button>
+    </div>
+  </div>
+
   {/* Static Managers List & Active Employees List */}
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
     
@@ -229,30 +334,29 @@ const AdminDashboard = () => {
       {managers.map((manager)=>{
         return (
           <div key={manager._id} className="border p-2 rounded flex justify-between items-center text-sm bg-gray-50">
-        <div>
-          <p className="font-semibold text-gray-800">{manager.name}</p>
-          <p className="text-xs text-gray-500">{manager.email}</p>
-        </div>
-        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Manager</span>
-      </div>
+            <div>
+              <p className="font-semibold text-gray-800">{manager.name}</p>
+              <p className="text-xs text-gray-500">{manager.email}</p>
+            </div>
+            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Manager</span>
+          </div>
         )
-        
       })}
     </div>
 
-    {/* Active Employees List (Static UI) */}
+    {/* Active Employees List  */}
     <div className="bg-white p-4 border rounded space-y-3">
       <h2 className="font-bold text-md border-b pb-2">Active Employees List</h2>
       {
         activeEmployees.map((employee)=>{
           return(
             <div key={employee._id} className="border p-2 rounded flex justify-between items-center text-sm bg-gray-50">
-        <div>
-          <p className="font-semibold text-gray-800">{employee.name}</p>
-          <p className="text-xs text-gray-500">{employee.email}</p>
-        </div>
-        <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">{employee.status}</span>
-      </div>
+              <div>
+                <p className="font-semibold text-gray-800">{employee.name}</p>
+                <p className="text-xs text-gray-500">{employee.email}</p>
+              </div>
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">{employee.status}</span>
+            </div>
           )
         })
       }
