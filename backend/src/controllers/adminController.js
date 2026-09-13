@@ -254,3 +254,26 @@ export const assignEmployeeToManager = async (req, res) => {
         });
     }
 };
+
+export const getActiveEmployees = async(req,res)=>{
+    try {
+
+        const employees = await User.find({
+            role:"employee",
+            status: { $in: ["pending", "active"] },
+            manager:null
+        }).select("-password")
+
+
+        res.status(200).json({
+            message:"Employees fetched successfully",
+            employees
+        })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message:"Error in getting employees"
+        })
+    }
+}

@@ -1,7 +1,7 @@
 import express from 'express'
 import protect from '../middlewares/authMiddleware.js';
 import { authorize } from '../middlewares/roleMiddleware.js';
-import { approveEmployee, assignEmployeeToManager, createManager, getManagers, getPendingEmployee, rejectEmployee } from '../controllers/adminController.js';
+import { approveEmployee, assignEmployeeToManager, createManager, getActiveEmployees, getManagers, getPendingEmployee, rejectEmployee } from '../controllers/adminController.js';
 
 
 const router = express.Router();
@@ -11,6 +11,7 @@ router.patch("/employee/:id/approve",protect,authorize("admin"),approveEmployee)
 router.patch("/employee/:id/reject",protect,authorize("admin"),rejectEmployee)
 router.post("/manager/create",protect,authorize("admin"),createManager)
 router.get("/manager",protect,authorize("admin"),getManagers);
+router.get("/employee/active",protect,authorize("admin"),getActiveEmployees)
 router.patch("/manager/:managerId/employee/:employeeId",protect,authorize("admin"),assignEmployeeToManager)
 
 export default router;
