@@ -20,6 +20,7 @@ const AdminDashboard = () => {
   const [showEmployees, setshowEmployees] = useState(false)
   const [managerSearch, setManagerSearch] = useState("")
   const [employeeSearch, setEmployeeSearch] = useState("")
+  const [assignedEmployees, setAssignedEmployees] = useState([])
 
   const logout = ()=>{
         localStorage.removeItem("token")
@@ -137,6 +138,63 @@ const AdminDashboard = () => {
   useEffect(()=>{
     getActiveAndPendingEmployess();
   },[])
+
+
+  const assignEmployee = async () => {
+  if (!selectedEmployee || !selectedManager) {
+    toast.error("Please select employee and manager");
+    return;
+  }
+
+  try {
+    const response = await api.patch(
+      `/api/admin/manager/${selectedManager}/employee/${selectedEmployee}`
+    );
+
+    toast.success(response.data.message);
+
+    // Find the employee that was assigned
+    const employee = activeEmployees.find(
+      (employee) => employee._id === selectedEmployee
+    );
+
+    // Add manager ID to the employee locally
+    const updatedEmployee = {
+      ...employee,
+      manager: selectedManager
+    };
+
+    // Remove from unassigned employees
+    setActiveEmployees((employees) =>
+      employees.filter((employee) => employee._id !== selectedEmployee)
+    );
+
+    // Add to assigned employees
+    setAssignedEmployees((employees) => [
+      ...employees,
+      updatedEmployee
+    ]);
+
+    setSelectedEmployee("");
+    setSelectedManager("");
+    setManagerSearch("");
+    setEmployeeSearch("");
+
+  } catch (error) {
+    toast.error(error.response?.data?.message);
+  }
+};
+
+  const getAssignedEmployees = async () => {
+    const response = await api.get("/api/admin/employee/assigned");
+
+    setAssignedEmployees(response.data.employees);
+};
+
+useEffect(()=>{
+  getAssignedEmployees();
+},[])
+
   return (
    <div className="p-4 bg-gray-50 min-h-screen space-y-6 max-w-4xl mx-auto font-sans">
       
@@ -319,7 +377,7 @@ const AdminDashboard = () => {
 
     {/* Assign Button */}
     <div className="flex justify-end pt-2">
-      <button className="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700">
+      <button onClick={assignEmployee} className="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700">
         Assign Employee
       </button>
     </div>
@@ -366,15 +424,37 @@ const AdminDashboard = () => {
 
   {/* Managers & Assigned Employees */}
   <div className="bg-white p-4 border rounded space-y-3">
-    <h2 className="font-bold text-md border-b pb-2">Managers & Employees</h2>
-    <div className="border p-3 rounded text-sm bg-gray-50">
-      <p className="font-semibold text-gray-700">Manager: Mark Smith</p>
-      <ul className="list-disc pl-5 mt-1 text-gray-600">
-        <li>Employee A (a@test.com)</li>
-        <li>Employee B (b@test.com)</li>
-      </ul>
-    </div>
-  </div>
+  <h2 className="font-bold text-md border-b pb-2">
+    Managers & Employees
+  </h2>
+
+  {managers.map((manager) => {
+    return (
+      <div
+        key={manager._id}
+        className="border p-3 rounded text-sm bg-gray-50"
+      >
+        <p className="font-semibold text-gray-700">
+          Manager: {manager.name}
+        </p>
+
+        <ul className="list-disc pl-5 mt-1 text-gray-600">
+          {assignedEmployees
+            .filter((employee) => {
+              return employee.manager === manager._id;
+            })
+            .map((employee) => {
+              return (
+                <li key={employee._id}>
+                  {employee.name} ({employee.email})
+                </li>
+              );
+            })}
+        </ul>
+      </div>
+    );
+  })}
+</div>
 
 </div>
   )
