@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import {api} from '../services/api.js'
-import { useNavigate } from 'react-router-dom';
 import AdminDashboard from './AdminDashboard.jsx';
 import ManagerDashboard from './ManagerDashboard.jsx';
 import EmployeeDashboard from './EmployeeDashboard.jsx';
@@ -10,7 +9,6 @@ import EmployeeDashboard from './EmployeeDashboard.jsx';
 const Dashboard = () => {
 
     const [user, setUser] = useState(null)
-    const navigate = useNavigate();
 
     const getUserData = async()=>{
         try {

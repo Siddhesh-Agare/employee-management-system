@@ -769,6 +769,7 @@ const AdminDashboard = () => {
                               <li key={emp._id} className="bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-700 flex justify-between items-center">
                                 <span className="font-medium">{emp.name}</span>
                                 <span className="text-[10px] text-slate-400">{emp.email}</span>
+                                <span>{emp.status}</span>
                               </li>
                             ))}
                           </ul>
