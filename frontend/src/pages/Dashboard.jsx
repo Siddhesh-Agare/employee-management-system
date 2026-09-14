@@ -28,11 +28,7 @@ const Dashboard = () => {
       getUserData()
     }, [])
 
-    const logout = ()=>{
-        localStorage.removeItem("token")
-        toast.success("Logged out successfully");
-        navigate("/");
-    }
+    
     
   return (
     <div>
@@ -56,9 +52,6 @@ const Dashboard = () => {
       ): (
         <p>Loading</p>
       )}
-
-      
-      <button onClick={logout}>logout</button>
     </div>
   )
 }
