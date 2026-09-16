@@ -41,7 +41,7 @@ const Dashboard = () => {
         user.role === "admin" ? (
         <AdminDashboard/>
       ): user.role === "manager" ?(
-        <ManagerDashboard/>
+        <ManagerDashboard name={user.name}/>
       ): (
         <EmployeeDashboard/>
       )  
