@@ -150,6 +150,8 @@ export const createTask = async(req, res)=>{
 
         })
 
+        await task.populate("assignedTo", "name email");
+
         res.status(201).json({
             message:`task created successfully`,
             task
@@ -170,7 +172,7 @@ export const getManagerTask = async(req, res) =>{
 
         const tasks = await Task.find({
             assignedBy:req.user._id,
-        })
+        }).populate("assignedTo"," name email");
 
         res.status(200).json({
             message:"Your tasks",

@@ -7,6 +7,7 @@ const ManagerDashboard = () => {
 
   const navigate = useNavigate();
   const [myEmployees, setMyEmployees] = useState([])
+  const [myTasks, setMyTasks] = useState([])
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
@@ -32,9 +33,7 @@ const ManagerDashboard = () => {
     }
   }
 
-  useEffect(()=>{
-    getMyEmployees();
-  },[])
+  
 
   const createTask = async()=>{
     try {
@@ -51,6 +50,11 @@ const ManagerDashboard = () => {
       setAssignedTo("");
       setDueDate("");
       toast.success(response.data.message)
+
+      setMyTasks((tasks) => [
+      ...tasks,
+      response.data.task
+    ]);
       
       
     } catch (error) {
@@ -97,6 +101,24 @@ const ManagerDashboard = () => {
     }
 
   }
+
+  const getMyTasks = async()=>{
+    try {
+
+      const response = await api.get("/api/manager/tasks");
+      console.log(response.data.tasks);
+      setMyTasks(response.data.tasks)
+      
+      
+    } catch (error) {
+      toast.error(error.response?.data?.message)
+    }
+  }
+
+  useEffect(()=>{
+    getMyEmployees();
+    getMyTasks();
+  },[])
 
   return (
    <div className="p-4 max-w-xl mx-auto font-sans space-y-4">
@@ -194,6 +216,43 @@ const ManagerDashboard = () => {
     >
       Create task
     </button>
+  </div>
+
+  <div>
+    {
+      myTasks.map((task)=>{
+        return (
+          <div key={task._id}>
+  <p>{task.title}</p>
+
+  <p>{task.description}</p>
+
+  <p>
+    Assigned to: {task.assignedTo.name}
+  </p>
+
+  <p>
+    Due: {new Date(task.dueDate).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    })}
+  </p>
+
+  <p>Status: {task.status}</p>
+
+  <p>{task.feedback}</p>
+
+  <p>{task.response}</p>
+
+  {task.status === "submitted" && (
+    <button>Review</button>
+  )}
+</div>
+        )
+
+      })
+    }
   </div>
 
 </div>
