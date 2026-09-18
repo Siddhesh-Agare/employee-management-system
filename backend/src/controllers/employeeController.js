@@ -87,6 +87,10 @@ export const updateTaskStatus = async (req, res) => {
             });
         }
 
+        return res.status(400).json({
+            message: "Invalid task status"
+        });
+
     } catch (error) {
         console.log(error);
 
