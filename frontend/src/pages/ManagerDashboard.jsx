@@ -30,6 +30,7 @@ const ManagerDashboard = (props) => {
     // Feedback
     const [feedback, setFeedback] = useState("");
     const [selectedTask, setSelectedTask] = useState(null);
+    const [creatingTask, setCreatingTask] = useState(false);
 
 
     // -------------------------
@@ -103,65 +104,77 @@ const ManagerDashboard = (props) => {
     // -------------------------
     // Create Task
     // -------------------------
+const createTask = async (e) => {
 
-    const createTask = async (e) => {
+    if (e) {
+        e.preventDefault();
+    }
 
-        if (e) {
-            e.preventDefault();
-        }
+    // Prevent multiple submissions
+    if (creatingTask) {
+        return;
+    }
 
-        if (
-            !title.trim() ||
-            !description.trim() ||
-            !assignedTo ||
-            !dueDate
-        ) {
+    if (
+        !title.trim() ||
+        !description.trim() ||
+        !assignedTo ||
+        !dueDate
+    ) {
 
-            toast.error(
-                "Please fill in all task fields"
-            );
+        toast.error(
+            "Please fill in all task fields"
+        );
 
-            return;
-        }
+        return;
+    }
 
-        try {
+    try {
 
-            const response = await api.post(
-                "/api/manager/tasks/create",
-                {
-                    title,
-                    description,
-                    assignedTo,
-                    dueDate
-                }
-            );
+        setCreatingTask(true);
 
-            setTitle("");
-            setDescription("");
-            setAssignedTo("");
-            setDueDate("");
+        const response = await api.post(
+            "/api/manager/tasks/create",
+            {
+                title,
+                description,
+                assignedTo,
+                dueDate
+            }
+        );
 
-            toast.success(
-                response.data.message ||
-                "Task created successfully"
-            );
+        setTitle("");
+        setDescription("");
+        setAssignedTo("");
+        setDueDate("");
 
-            setMyTasks((tasks) => [
-                ...tasks,
-                response.data.task
-            ]);
+        toast.success(
+            response.data.message ||
+            "Task created successfully"
+        );
 
-            setActiveTab("tasks");
+        setMyTasks((tasks) => [
+            ...tasks,
+            response.data.task
+        ]);
 
-        } catch (error) {
+        setActiveTab("tasks");
 
-            toast.error(
-                error.response?.data?.message ||
-                "Failed to create task"
-            );
+    } catch (error) {
 
-        }
-    };
+        toast.error(
+            error.response?.data?.message ||
+            "Failed to create task"
+        );
+
+    } finally {
+
+        setCreatingTask(false);
+
+    }
+};
+
+
 
 
     // -------------------------
@@ -465,6 +478,7 @@ const ManagerDashboard = (props) => {
                         dueDate={dueDate}
                         setDueDate={setDueDate}
                         activeEmployees={activeEmployees}
+                        loading={creatingTask}
                     />
 
                 )}
