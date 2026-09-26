@@ -4,7 +4,7 @@ A full-stack **Employee Management System** built using the **MERN stack**. The 
 
 ## Live Demo
 
-**Frontend:** employee-management-system-ten-amber.vercel.app
+**Frontend:** https://employee-management-system-ten-amber.vercel.app
 
 **Backend API:** YOUR_RENDER_URL
 
