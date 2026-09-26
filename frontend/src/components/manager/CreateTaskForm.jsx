@@ -10,7 +10,8 @@ const CreateTaskForm = ({
     setAssignedTo,
     dueDate,
     setDueDate,
-    activeEmployees
+    activeEmployees,
+    loading
 }) => {
 
     return (
@@ -116,9 +117,14 @@ const CreateTaskForm = ({
 
                 <button
                     type="submit"
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-lg text-xs shadow-xs transition-colors mt-2"
+                    disabled={loading}
+                    className={`w-full text-white font-semibold py-2.5 rounded-lg text-xs shadow-xs transition-colors mt-2 ${
+                        loading
+                            ? "bg-emerald-400 cursor-not-allowed"
+                            : "bg-emerald-600 hover:bg-emerald-700"
+                    }`}
                 >
-                    Publish & Dispatch Task
+                    {loading ? "Creating Task..." : "Publish & Dispatch Task"}
                 </button>
 
             </form>
@@ -128,3 +134,4 @@ const CreateTaskForm = ({
 };
 
 export default CreateTaskForm;
+
